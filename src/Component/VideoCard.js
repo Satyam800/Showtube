@@ -4,7 +4,7 @@ const VideoCard = (props) => {
   return (
     <>
       <div className="h-50 w-30 p-2 shadow-lg rounded-md  cursor-pointer">
-        {console.log(props, "op")}
+       
 
         <img className="rounded-md" src={props.thumbnail?.medium.url} />
 

@@ -5,4 +5,6 @@ export const VideoApi =
   API_KEY;
 
 export const YouTube_Search_API =
-  "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+'http://google.com/complete/search?client=chrome&q='
+
+export const SearchVideo="https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q="

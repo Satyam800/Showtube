@@ -10,7 +10,7 @@ const ButtonList = () => {
   console.log(showSearchSuggestion, "mbnvcx");
   return (
     <>
-      <div className="grid grid-flow-col content-center justify-items-center  w-[92%] h-20 shadow-lg bg-slate-100 fixed top-[9%] pl-8 ml-[8%] rounded-lg ">
+      <div className="grid grid-flow-col content-center justify-items-center  w-[92%] h-20 shadow-sm bg-white fixed top-[9%] pl-8 ml-[8%] rounded-lg ">
         <div className="h-full w-1/2 bg-gray-300 rounded-2xl text-center">
           a
         </div>
