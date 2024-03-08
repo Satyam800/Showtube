@@ -8,7 +8,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Body from "./Component/Body";
 import MainBody from "./Component/MainBody";
 import WatchPage from "./Component/WatchPage";
-
+import Login from "./views/Login"
+import PrivateRoute from "./isAuth.js/PrivateRoute";
+import ResetPassword from "./views/ResetPassword";
+import OTPVerification from "./views/OTPVerification.js";
+import NewPassword from "./views/NewPassword.js";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -21,16 +25,38 @@ const appRouter = createBrowserRouter([
 
       {
         path: "watch",
-        element: <WatchPage />,
+        element:<PrivateRoute> <WatchPage /> </PrivateRoute>,
       },
+     
     ],
+    
   },
-]);
-function App() {
+  {
+    path:"/login",
+    element:<Login/>,
+  
+  },
+
+  {
+    path:"/reset",
+    element:<ResetPassword/>
+  },
+  {
+    path:"/OTP-verify",
+    element:<OTPVerification/>
+  },
+  {
+    path:"New-Password",
+    element:<NewPassword/>
+  }
+  
+])
+
+function App() { 
   return (
     <>
       <Provider store={Store}>
-        <Header />
+
 
         <RouterProvider router={appRouter} />
       </Provider>

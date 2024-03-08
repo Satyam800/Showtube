@@ -6,6 +6,7 @@ const SearchSlice = createSlice({
     event: "",
     Result: null,
     isOnFocus: false,
+    isSearch:false
   },
   reducers: {
     SearchType: (state, action) => {
@@ -19,8 +20,11 @@ const SearchSlice = createSlice({
     ShowSuggestion: (state, action) => {
       state.isOnFocus = action.payload;
     },
+    SearchSuggest:(state,action)=>{
+      state.isSearch=action.payload
+    }
   },
 });
 
-export const { SearchType, SearchRes, ShowSuggestion } = SearchSlice.actions;
+export const { SearchType, SearchRes, ShowSuggestion,SearchSuggest } = SearchSlice.actions;
 export default SearchSlice.reducer;
