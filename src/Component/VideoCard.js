@@ -9,9 +9,9 @@ const VideoCard = (props) => {
         <img className="rounded-md" src={props.thumbnail?.medium.url} />
 
         <div className="w-30 ">
-          <div className="w-30 h-10">{props.item.snippet.channelTitle}</div>
+          <div className="w-30 h-10 ml-2">{props.item.snippet?.channelTitle}</div>
 
-          <div>{props.item.statistics.viewCount + "views"}</div>
+          <div>{props.item.statistics?.viewCount + "views"}</div>
         </div>
       </div>
     </>

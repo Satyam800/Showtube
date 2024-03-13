@@ -11,6 +11,7 @@ import NotificationSlice from "./NotificationSlice";
 import UserSlice from "./UserSlice";
 import ThemeSlice from "./ThemeSlice";
 import AuthSlice from "./authSlice";
+import historySlice from "./historySlice";
 
 const Store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const Store = configureStore({
     user:UserSlice,
     theme:ThemeSlice,
     auth:AuthSlice,
+    history:historySlice,
     
   },
 })
