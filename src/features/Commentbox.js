@@ -81,11 +81,18 @@ const CommentContainer = () => {
     setisfocusInput(true);
   };
 
+  const user = JSON.parse(localStorage.getItem("id"));
+  const userFirstName = user?.name.split("");
+
   return (
     <>
       <div className="text-xl font-semibold m-3">Comment </div>
       <div className="flex">
-        <div className="rounded-2xl bg-black h-8 w-8 m-2"></div>
+       {user?
+         <div className="w-10 h-10 p-1 pl-3 cursor-pointer rounded-full bg-blue-800 text-white text-xl font-semibold">
+         {userFirstName?.[0].toUpperCase()}
+       </div>
+        : <div className="rounded-2xl bg-black h-8 w-8 m-2"></div>}
         <div className="w-[40%]  h-7 ml-3 rounded-xl border-b-2 hover:border-blue-400  border-slate-950">
           <input
             name="Content"
@@ -119,7 +126,7 @@ const CommentContainer = () => {
             )}
           </div>
 
-          <div className=" sm:absolute flex ml-[28%] ">
+          <div className=" sm:absolute flex sm:ml-[28%] ml-[8%] ">
             <div
               onClick={handleCancel}
               className=" font-semibold cursor-pointer w-24 h-6 rounded-xl ml-2 bg-slate-200 hover:bg-slate-500 pl-6"

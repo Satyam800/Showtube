@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSearchParams,useLocation } from "react-router-dom";
+import { useSearchParams, useParams, useLocation } from "react-router-dom";
 import { closeMenu } from "../Utils/HembegerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { BiLike } from "react-icons/bi";
@@ -13,7 +13,8 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { Channeltitle } from "../Utils/SubscribeSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { HistoryArray } from "../Utils/historySlice";
+import ReactPlayer from "react-player";
 import {
   LikeVideo,
   DisLikeVideo,
@@ -25,6 +26,14 @@ import Comment_List from "../features/Comment_List";
 import { isSubscribe, ConfirmUnsubscribe } from "../Utils/SubscribeSlice";
 import { ImTextColor } from "react-icons/im";
 import Header from "./Header";
+import { MdPlaylistAdd } from "react-icons/md";
+import { historyArray } from "../Utils/historySlice";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { BsEmojiGrin } from "react-icons/bs";
+import SharePopup from "./Share/sharePopup";
+import { Share } from "../Utils/HembegerSlice";
+
+
 
 const WatchPage = () => {
   let VideoItem = useSelector((store) => store.video?.Item);
@@ -35,12 +44,17 @@ const WatchPage = () => {
   let unsubscribe = useSelector((store) => store.subscribe.unsubscribe);
   let Channeltitlename = useSelector((store) => store.subscribe.title);
   const notificationMessage = useSelector((store) => store.notification?.text);
-  const location=useLocation()
+  const location = useLocation();
   const popupRef = useRef(null);
   const overlayRef = useRef(null);
+  const timeRef = useRef();
   const [searchParam] = useSearchParams();
+  const shareRef = useRef();
+  const [isShare, SetisShare] = useState(false);
+  const params = useParams();
+
   let dispatch = useDispatch();
- console.log(location,"lo");
+  console.log(location, "lo");
   let title = VideoItem?.filter((item) => {
     if (searchParam.get("v") == item.id) {
       dispatch(Channeltitle(item?.snippet.channelTitle));
@@ -48,16 +62,18 @@ const WatchPage = () => {
     }
   });
 
-  console.log(typeof searchParam.get("v"), "id");
+  console.log(searchParam.get("v"), "id");
 
   console.log(title, "kaLI");
 
   useEffect(() => {
+    const id = JSON.parse(localStorage.getItem("id"));
     dispatch(closeMenu());
     dispatch(ConfirmUnsubscribe(false)); // for overlay diappear, when we again go into the page, when we do not cut or cancel the overlay page
   }, []);
 
   const handleSubscribe = () => {
+    console.log(searchParam, "Sebscribe");
     dispatch(isSubscribe(true));
     setTimeout(() => {
       toast(notificationMessage, {
@@ -72,6 +88,7 @@ const WatchPage = () => {
   };
 
   const handleSubscribed = () => {
+    console.log(timeRef.current, "timeRef");
     dispatch(isSubscribe(false));
     dispatch(ConfirmUnsubscribe(false));
   };
@@ -109,7 +126,6 @@ const WatchPage = () => {
 
   const handlecut = (e) => {
     console.log(e, "ll");
-
     let b = box.map((i) => {
       if (i == e.target.innerText) {
         return null;
@@ -122,32 +138,48 @@ const WatchPage = () => {
     setbox([...b]);
   };
 
-  useEffect((box) => {
-    if (box?.length <= 3) {
-      const handlenull = (event) => {
-        event.stopPropagation();
-        event.target.innerText = null;
-      };
-      document.addEventListener("click", handlenull);
-    }
-  }, []);
+  const handleStart = () => {
+    dispatch(
+      HistoryArray({
+        videoId: searchParam.get("v"),
+        userId: JSON.parse(localStorage.getItem("id"))._id,
+      })
+    );
+  };
 
+  const src =
+    "https://www.youtube.com/embed/" + searchParam.get("v") + "?&autoplay=1";
+
+useEffect(()=>{
+  dispatch(Share(false)) 
+},[])
+
+  const onShare = () => {
+    dispatch(Share(true))
+    
+  }
+
+  const isShareActive=useSelector(store=>store.Icon.share)
   return (
     <>
-    <Header />
-      <div className="w-full h-[70%] mt-[4%] p-4 ">
-        <iframe
-          width="100%"
-          height="600"
-          src={"https://www.youtube.com/embed/" + searchParam.get("v")}
+     { isShareActive?<div className="w-[50%]  opacity-90">
+        <SharePopup />
+      </div>:null}
+    
+      <Header />
+      <div className="sm:w-[70%] sm:h-[70%] w-full h-[45%] sm:mt-[5%] mt-[24%] p-4  ">
+        <ReactPlayer
+          url={src}
+          width="690px"
+          height="400px"
+          allowfullscreen="true"
           title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-    gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
+          controls="true"
+          playing="true"
+          onStart={handleStart}
+        />
       </div>
-      <div className=" bg-white text-xl font-semibold pl-4 mb-4">
+      <div className=" bg-white text-xl font-semibold pl-4 mb-4 mt-9 ">
         {title?.map((item) => {
           return item?.snippet.title;
         })}
@@ -190,10 +222,10 @@ const WatchPage = () => {
           </div>
         </div>
 
-        <div className="flex  w-[30%] justify-between  sm:space-x-1  ml-12 mt-5 sm:ml-2">
+        <div className="flex  sm:w-[25%] w-[65%] cursor-pointer justify-between  sm:space-x-1  ml-6 mt-5 sm:ml-2">
           <div className=" flex   ">
             <div
-              className="flex w-24 h-8 rounded-l-2xl bg-gray-400 hover:bg-slate-500 items-center pl-8 border-r-2 border-gray-500 sm:w-16 "
+              className="flex w-24 h-8 rounded-2xl bg-gray-400 hover:bg-slate-500 items-center pl-5 border-r-2 border-gray-500 sm:w-16 "
               onClick={(e) => {
                 dispatch(LikeVideo());
                 console.log("calles1");
@@ -201,60 +233,25 @@ const WatchPage = () => {
             >
               {isLike ? <AiFillLike size={24} /> : <BiLike size={24} />}
             </div>
-
-            <div
-              className="flex w-12 bg-gray-400 h-8 rounded-r-2xl hover:bg-slate-500 items-center  pl-1 "
-              onClick={() => {
-                dispatch(DisLikeVideo());
-                console.log("called2");
-              }}
-            >
-              {isdislike ? (
-                <AiTwotoneDislike size={24} />
-              ) : (
-                <AiOutlineDislike size={24} />
-              )}
-            </div>
           </div>
 
           <div className="flex w-16 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-2xl pl-4 ">
             <CgPlayListAdd size={24} />
           </div>
 
-          <div className="flex w-24 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-2xl pl-4">
+          <div
+            className="flex w-24 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-2xl pl-4"
+            onClick={onShare}
+          >
             <RiShareForwardLine size={24} />
 
             <div className="font-semibold ">Share</div>
           </div>
 
-          <div
-            className="flex w-9 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-full pl-1 "
-            onClick={(e) => {
-              dispatch(isthreedotactive());
-            }}
-          >
-            <div>
-              <BsThreeDots size={24} />
-            </div>
-
-            {isthreedot && (
-              <div
-                className="  bg-slate-200 relative  mb-4 sm:bottom-12 w-40 h-40 rounded-xl    font-bold "
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <ul className="flex flex-col w-full  ">
-                  <li className=" h-[25%]  hover:bg-slate-100">Clip</li>
-                  <li className=" h-[25%] hover:bg-slate-100">Save</li>
-                  <li className=" h-[25%] hover:bg-slate-100">
-                    Show transcript
-                  </li>
-                  <li className=" h-[25%] hover:bg-slate-100">Report</li>
-                </ul>
-              </div>
-            )}
-          </div>
+          <MdOutlineWatchLater
+            className="flex sm:w-8 sm:h-8 w-8 h-8  hover:bg-slate-500 items-center rounded-full pl-1 "
+            size={32}
+          />
         </div>
       </div>
 

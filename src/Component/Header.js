@@ -23,17 +23,17 @@ import { TiTick } from "react-icons/ti";
 import { ThemeChange } from "../Utils/ThemeSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useLocation, Navigate } from "react-router-dom";
-import { loginState,clearMessage } from "../Utils/authSlice";
+import { loginState, clearMessage } from "../Utils/authSlice";
 const Header = () => {
   const Searchdata = useSelector((state) => state.search?.event);
   const ShowResult = useSelector((state) => state.search?.Result);
   const showSearchSuggestion = useSelector((state) => state.search.isOnFocus);
   const CacheResult = useSelector((state) => state.cache);
-  
+
   const clickonmode = useSelector((store) => store.user.ModeOption);
   const isdarkmode = useSelector((store) => store.theme.isdark);
-  const isSigned= useSelector(store=>store.auth.Signin)
-  const isLogin= useSelector(store=>store.auth.login)
+  const isSigned = useSelector((store) => store.auth.Signin);
+  const isLogin = useSelector((store) => store.auth.login);
   const dispatch = useDispatch();
   const UserRefBox = useRef();
   const UserRef = useRef();
@@ -43,38 +43,39 @@ const Header = () => {
   const onclickonModeoptionRef = useRef();
   const [userDetail, SetuserDetail] = useState();
   const [isSignIn, SetisSignIn] = useState("");
-  const [ClickedOnUser,SetClickedOnUser]=useState(false)
+  const [ClickedOnUser, SetClickedOnUser] = useState(false);
   const SearchResult = () => {
     console.log(ShowResult, "ok");
-  };
+}
   const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("id");
-    dispatch(clearMessage())
+    dispatch(clearMessage());
     SetuserDetail(null);
-   SetisSignIn(false)
-    SetClickedOnUser(false)
-  }
+    SetisSignIn(false);
+    SetClickedOnUser(false);
+  };
 
-console.log(isLogin,"isLogin");
+  console.log(isLogin, "isLogin");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("id"));
-    console.log(user, "user");
+    
     SetuserDetail(user);
-    SetisSignIn(isLogin)
-  }, [])
+    SetisSignIn(isLogin);
+    
+  }, []);
 
-  
+  const userFirstName = userDetail?.name.split("");
 
   useEffect(() => {
     let promise = setTimeout(() => {
       if (CacheResult[Searchdata]) {
         dispatch(SearchRes(CacheResult[Searchdata]));
       } else {
-        Search()
+        Search();
       }
-    }, 300)
+    }, 300);
 
     console.log(CacheResult, "cachetheresult");
     return () => {
@@ -105,17 +106,13 @@ console.log(isLogin,"isLogin");
   };
 
   const handleuser = () => {
- 
-   
-    if(UserRef.current.innerText=="Login"){
-      
-    SetisSignIn(true)
-      dispatch(loginState(false))
+    if (UserRef.current.innerText == "Login") {
+      SetisSignIn(true);
+      dispatch(loginState(false));
+    } else {
+      SetClickedOnUser(true);
     }
-    else{
-      SetClickedOnUser(true)
-    }
-  }
+  };
 
   useEffect(() => {
     const handleoustside = (e) => {
@@ -123,7 +120,7 @@ console.log(isLogin,"isLogin");
         !UserRefBox.current?.contains(e.target) &&
         !UserRef?.current?.contains(e.target)
       ) {
-       SetClickedOnUser(false)
+        SetClickedOnUser(false);
       }
     };
 
@@ -192,11 +189,10 @@ console.log(isLogin,"isLogin");
             <BsFillBellFill size={22} />
           </div>
           <div onClick={handleuser} ref={UserRef}>
-            {JSON.parse(localStorage.getItem('id')) ? (
-              <FaUserTie
-                className="h-8 w-8 bg-slate-300 rounded-full p-1 cursor-pointer "
-                size={24}
-              />
+            {JSON.parse(localStorage.getItem("id")) ? (
+              <div className="w-10 h-10 p-1 pl-3 cursor-pointer rounded-full bg-blue-800 text-white text-xl font-semibold">
+                {userFirstName?.[0].toUpperCase()}
+              </div>
             ) : (
               <div className="w-20  p-2 pl-4 cursor-pointer font-bold rounded-3xl bg-black text-white">
                 Login
@@ -219,24 +215,22 @@ console.log(isLogin,"isLogin");
           className=" flex flex-col fixed w-72 h-[98%] mt-3 ml-[70%] bg-slate-50 z-30 rounded-xl "
           ref={UserRefBox}
         >
-          <div className="flex flex-col  items-center border-b-2 border-slate-200 ">
-            <div className="font-semibols h-16 ">{"Userlogo"}</div>
-            <div className="">{userDetail?.name}</div>
+          <div className="flex justify-center border-b-2 border-slate-200 ">
+          <div className="w-10 h-10 m-2 p-1 pl-3 cursor-pointer rounded-full bg-blue-800 text-white text-xl font-semibold">
+                {userFirstName?.[0].toUpperCase()}
+              </div>
+            <div className="ml-2">{userDetail?.name}</div>
           </div>
 
           <div className="flex  border-b-2 border-white hover:bg-slate-200 p-2 cursor-pointer">
             <span>
               <HiOutlineLogout size={28} />
             </span>
-            <div
-              className="ml-3 hover: bg-white"
-              onClick={handleSignOut}
-             
-            >
+            <div className="ml-3 hover: bg-white" onClick={handleSignOut}>
               Sign Out
             </div>
           </div>
-        
+
           <div
             className="flex  border-b-2 border-white hover:bg-slate-200 p-2 cursor-pointer"
             onClick={handleMode}
@@ -253,9 +247,9 @@ console.log(isLogin,"isLogin");
         </div>
       ) : null}
 
-         {isSignIn || isLogin ? 
-              <Navigate to="/login" state={{ from: location }} replace />
-            : null}
+      {isSignIn || isLogin ? (
+        <Navigate to="/login" state={{ from: location }} replace />
+      ) : null}
 
       {clickonmode ? (
         <div

@@ -13,6 +13,7 @@ import PrivateRoute from "./isAuth.js/PrivateRoute";
 import ResetPassword from "./views/ResetPassword";
 import OTPVerification from "./views/OTPVerification.js";
 import NewPassword from "./views/NewPassword.js";
+import WatchHistory from "./Component/History/WatchHistory.js";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -48,6 +49,10 @@ const appRouter = createBrowserRouter([
   {
     path:"New-Password",
     element:<NewPassword/>
+  },
+  {
+    path:"/history",
+    element:<WatchHistory/>
   }
   
 ])

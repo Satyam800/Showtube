@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const HembegerSlice = createSlice({
   name: "Icon",
   initialState: {
-    isMenuOpen: true,
+    isMenuOpen: false,
+    share:false
   },
   reducers: {
     toggleMenu: (state) => {
@@ -12,8 +13,11 @@ const HembegerSlice = createSlice({
     closeMenu: (state) => {
       state.isMenuOpen = false;
     },
+    Share:(state,action)=>{
+      state.share=action.payload
+    }
   },
 });
 
-export const { toggleMenu, closeMenu } = HembegerSlice.actions;
+export const { toggleMenu, closeMenu,Share } = HembegerSlice.actions;
 export default HembegerSlice.reducer;
