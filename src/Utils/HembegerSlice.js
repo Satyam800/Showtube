@@ -4,7 +4,8 @@ const HembegerSlice = createSlice({
   name: "Icon",
   initialState: {
     isMenuOpen: false,
-    share:false
+    share:false,
+    Playlist:false
   },
   reducers: {
     toggleMenu: (state) => {
@@ -15,9 +16,12 @@ const HembegerSlice = createSlice({
     },
     Share:(state,action)=>{
       state.share=action.payload
+    },
+    list:(state,action)=>{
+      state.Playlist=action.payload
     }
   },
 });
 
-export const { toggleMenu, closeMenu,Share } = HembegerSlice.actions;
+export const { toggleMenu, closeMenu,Share,list } = HembegerSlice.actions;
 export default HembegerSlice.reducer;

@@ -12,6 +12,9 @@ import UserSlice from "./UserSlice";
 import ThemeSlice from "./ThemeSlice";
 import AuthSlice from "./authSlice";
 import historySlice from "./historySlice";
+import playlistSlice from "./playlistSlice";
+import commentSlice from "./commentSlice";
+
 
 const Store = configureStore({
   reducer: {
@@ -28,6 +31,8 @@ const Store = configureStore({
     theme:ThemeSlice,
     auth:AuthSlice,
     history:historySlice,
+    playlist:playlistSlice,
+    comment:commentSlice,
     
   },
 })

@@ -24,6 +24,7 @@ import { ThemeChange } from "../Utils/ThemeSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useLocation, Navigate } from "react-router-dom";
 import { loginState, clearMessage } from "../Utils/authSlice";
+import { Link } from "react-router-dom";
 const Header = () => {
   const Searchdata = useSelector((state) => state.search?.event);
   const ShowResult = useSelector((state) => state.search?.Result);
@@ -46,7 +47,7 @@ const Header = () => {
   const [ClickedOnUser, SetClickedOnUser] = useState(false);
   const SearchResult = () => {
     console.log(ShowResult, "ok");
-}
+  };
   const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("id");
@@ -60,10 +61,9 @@ const Header = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("id"));
-    
+
     SetuserDetail(user);
     SetisSignIn(isLogin);
-    
   }, []);
 
   const userFirstName = userDetail?.name.split("");
@@ -84,19 +84,17 @@ const Header = () => {
   }, [Searchdata]);
   const url = YouTube_Search_API + Searchdata;
   async function Search() {
-    const data = await fetch(url, {
-      method: "GET",
-    });
-    const jsondata = await data.json();
-    console.log(jsondata, "Searchsuggestion");
-    dispatch(SearchRes(jsondata[1]));
-
-    dispatch(
-      CacheTheResult({
-        [Searchdata]: jsondata[1],
-      })
-    );
-    console.log(jsondata[1], "pkkllkjjhh");
+    // const data = await fetch(url, {
+    //   method: "GET",
+    // });
+    // const jsondata = await data.json();
+    // console.log(jsondata, "Searchsuggestion");
+    // dispatch(SearchRes(jsondata[1]));
+    // dispatch(
+    //   CacheTheResult({
+    //     [Searchdata]: jsondata[1],
+    //   })
+    // );
   }
 
   const icon = useSelector((state) => state.Icon?.isMenuOpen);
@@ -156,17 +154,20 @@ const Header = () => {
 
   return (
     <>
-      <div className="grid grid-cols-5 shadow-md items-baseline  fixed w-full z-20 bg-white">
+      <div className="grid sm:grid-cols-5 grid-cols-3 shadow-md items-baseline  fixed w-full z-20 bg-white">
         <div className="flex p-5   items-center   ">
           <img
             onClick={Iconswitch}
             className="h-6 mr-2 hover:bg-gray-200 hover:rounded-3xl cursor-pointer "
             src="https://cdn-icons-png.flaticon.com/512/3917/3917215.png"
           />
-          <ImYoutube2 size={49} className="ml-[30%] sm:ml-[15%]" />
+          <Link to="/">
+            {" "}
+            <ImYoutube2 size={49} className="ml-[30%] sm:ml-[15%]" />
+          </Link>
         </div>
 
-        <div className="  col-span-3 w-full   ">
+        <div className="  sm:col-span-3 col-span-4   w-full    ">
           <div className=" flex  items-baseline w-4/6 h-8 rounded-full border-2 border-zinc-300 ">
             <input
               placeholder="Search"
@@ -177,15 +178,15 @@ const Header = () => {
             />
 
             <div
-              className="cursor-pointer w-[5%] "
+              className="cursor-pointer w-[5%]  "
               onClick={() => SearchResult()}
             >
               <AiOutlineSearch size="19" />
             </div>
           </div>
         </div>
-        <div className=" flex justify-evenly align-baseline sm:mr-1 sm:space-x-2">
-          <div className="h-8 w-8 bg-slate-300 rounded-full p-1 cursor-pointer ">
+        <div className="absolute sm:left-[85%] top-7 left-[62%] flex justify-evenly  align-baseline sm:mr-1 sm:space-x-2">
+          <div className="h-8 w-8 mr-[55%] bg-slate-300 rounded-full p-1 cursor-pointer ">
             <BsFillBellFill size={22} />
           </div>
           <div onClick={handleuser} ref={UserRef}>
@@ -216,9 +217,9 @@ const Header = () => {
           ref={UserRefBox}
         >
           <div className="flex justify-center border-b-2 border-slate-200 ">
-          <div className="w-10 h-10 m-2 p-1 pl-3 cursor-pointer rounded-full bg-blue-800 text-white text-xl font-semibold">
-                {userFirstName?.[0].toUpperCase()}
-              </div>
+            <div className="w-10 h-10 m-2 p-1 pl-3 cursor-pointer rounded-full bg-blue-800 text-white text-xl font-semibold">
+              {userFirstName?.[0].toUpperCase()}
+            </div>
             <div className="ml-2">{userDetail?.name}</div>
           </div>
 

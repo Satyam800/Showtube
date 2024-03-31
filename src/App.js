@@ -14,6 +14,8 @@ import ResetPassword from "./views/ResetPassword";
 import OTPVerification from "./views/OTPVerification.js";
 import NewPassword from "./views/NewPassword.js";
 import WatchHistory from "./Component/History/WatchHistory.js";
+import LikedVideo from "./Component/Like/LikedVideo.js";
+import Playlistcard from "./Component/Playlist/Playlistcard.js";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -53,6 +55,14 @@ const appRouter = createBrowserRouter([
   {
     path:"/history",
     element:<WatchHistory/>
+  },
+  {
+    path:"/likedVideo",
+    element:<LikedVideo/>
+  },
+  {
+    path:"/playlist/",
+    element:<Playlistcard/>
   }
   
 ])

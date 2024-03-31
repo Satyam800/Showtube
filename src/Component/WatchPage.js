@@ -22,7 +22,7 @@ import {
   isclickOutsidethreedot,
 } from "../Utils/LikeSlice";
 import CommentContainer from "../features/Commentbox";
-import Comment_List from "../features/Comment_List";
+
 import { isSubscribe, ConfirmUnsubscribe } from "../Utils/SubscribeSlice";
 import { ImTextColor } from "react-icons/im";
 import Header from "./Header";
@@ -31,13 +31,17 @@ import { historyArray } from "../Utils/historySlice";
 import { MdOutlineWatchLater } from "react-icons/md";
 import { BsEmojiGrin } from "react-icons/bs";
 import SharePopup from "./Share/sharePopup";
-import { Share } from "../Utils/HembegerSlice";
-
-
-
+import { Share,list} from "../Utils/HembegerSlice";
+import Playlist from "./Playlist/Playlist";
+import { likeVideo,getlikeVideo,dislikeVideo } from "../Utils/LikeSlice";
+import { MdPlaylistPlay } from "react-icons/md";
+import { createcomment } from "../Utils/commentSlice";
+import CommentList from "../features/CommentList";
+import { getData } from "../Utils/commentSlice";
+import CommentCard from "../features/CommentCard";
 const WatchPage = () => {
   let VideoItem = useSelector((store) => store.video?.Item);
-  let isLike = useSelector((store) => store.like?.isLike);
+ 
   let isdislike = useSelector((store) => store.like?.isdislike);
   let isthreedot = useSelector((store) => store.like?.isthreedot);
   let Subscribed = useSelector((store) => store.subscribe.isValue);
@@ -52,9 +56,17 @@ const WatchPage = () => {
   const shareRef = useRef();
   const [isShare, SetisShare] = useState(false);
   const params = useParams();
-
+  const [playlist, Setplaylist] = useState(false);
+  const [dislike,Setdislike]=useState(null)
+  const isPlaylist=useSelector(store=>store.Icon.Playlist)
+  const data = useSelector((store) => store.comment.replies);
   let dispatch = useDispatch();
-  console.log(location, "lo");
+  const Commentdata = useSelector((store) => store.comment.commentlist);
+  
+  useEffect(()=>{
+console.log(data,Commentdata);
+  },[data,Commentdata])
+
   let title = VideoItem?.filter((item) => {
     if (searchParam.get("v") == item.id) {
       dispatch(Channeltitle(item?.snippet.channelTitle));
@@ -62,15 +74,11 @@ const WatchPage = () => {
     }
   });
 
-  console.log(searchParam.get("v"), "id");
-
-  console.log(title, "kaLI");
-
   useEffect(() => {
     const id = JSON.parse(localStorage.getItem("id"));
     dispatch(closeMenu());
     dispatch(ConfirmUnsubscribe(false)); // for overlay diappear, when we again go into the page, when we do not cut or cancel the overlay page
-  }, []);
+  }, [])
 
   const handleSubscribe = () => {
     console.log(searchParam, "Sebscribe");
@@ -79,13 +87,13 @@ const WatchPage = () => {
       toast(notificationMessage, {
         position: toast.POSITION.BOTTOM_LEFT,
         className: "foo-bar",
-      });
-    }, 500);
-  };
+      })
+    }, 500)
+  }
 
   const DoUnsubscribe = () => {
     dispatch(ConfirmUnsubscribe(true));
-  };
+  }
 
   const handleSubscribed = () => {
     console.log(timeRef.current, "timeRef");
@@ -150,23 +158,63 @@ const WatchPage = () => {
   const src =
     "https://www.youtube.com/embed/" + searchParam.get("v") + "?&autoplay=1";
 
-useEffect(()=>{
-  dispatch(Share(false)) 
-},[])
+  useEffect(() => {
+    dispatch(getlikeVideo({
+      user:JSON.parse(localStorage.getItem("id"))._id
+    }))
+    dispatch(Share(false));
+  }, []);
 
   const onShare = () => {
-    dispatch(Share(true))
-    
+    dispatch(Share(true));
+  };
+
+  const isShareActive = useSelector((store) => store.Icon.share);
+
+  const handlePlaylist=()=>{
+dispatch(list(true))
   }
 
-  const isShareActive=useSelector(store=>store.Icon.share)
+  
+    useEffect(() => {
+      dispatch(
+        getData({
+          commentable: searchParam.get("v"),
+          onModel: "Comment",
+        })
+      );
+    }, []);
+  
+
+  const getLikeData=useSelector(store=>store.like.likedata)
+  const [isLike,SetisLike]=useState("")
+  useEffect(()=>{
+const isLiked=getLikeData.filter((i)=>{
+if(i.videoId==searchParam.get("v")){
+  return true
+}
+console.log(i,"islike")
+}) 
+
+if(isLiked.length==1){
+  SetisLike(true)
+  Setdislike(false)
+}
+else{
+  SetisLike(false)
+  Setdislike(true)
+}
+  },[getLikeData])
+ 
   return (
     <>
-     { isShareActive?<div className="w-[50%]  opacity-90">
-        <SharePopup />
-      </div>:null}
-    
-      <Header />
+      {isShareActive ? (
+        <div className="fixed  w-full h-full bg-black opacity-80">
+          <SharePopup />
+        </div>
+      ) : null}
+         
+      <Header/>
       <div className="sm:w-[70%] sm:h-[70%] w-full h-[45%] sm:mt-[5%] mt-[24%] p-4  ">
         <ReactPlayer
           url={src}
@@ -181,25 +229,22 @@ useEffect(()=>{
       </div>
       <div className=" bg-white text-xl font-semibold pl-4 mb-4 mt-9 ">
         {title?.map((item) => {
-          return item?.snippet.title;
+          return item?.snippet.title
         })}
       </div>
-
-      <div className=" w-[90%]  ">
+      <div className=" w-[90%]">
         <div className=" flex space-x-6 align-baseline  ">
           <div className="h-12 w-12  rounded-full">
             <img
               className="h-10 w-10  rounded-full m-1"
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmKQkHxZUb53_2bH10WewJDiod9PutnPWaLw&usqp=CAU"
             />
-          </div>
-
-          <div className=" text-xl font-semibold ">
+          </div>           
+          <div className="text-xl font-semibold ">
             {title?.map((item) => {
               return item?.snippet.channelTitle;
             })}
-          </div>
-
+          </div>         
           <div className="">
             {Subscribed ? (
               <div
@@ -222,20 +267,35 @@ useEffect(()=>{
           </div>
         </div>
 
-        <div className="flex  sm:w-[25%] w-[65%] cursor-pointer justify-between  sm:space-x-1  ml-6 mt-5 sm:ml-2">
+        <div className="flex  sm:w-[25%] w-[65%] cursor-pointer justify-evenly  sm:space-x-1  ml-6 mt-5 sm:ml-2">
           <div className=" flex   ">
             <div
               className="flex w-24 h-8 rounded-2xl bg-gray-400 hover:bg-slate-500 items-center pl-5 border-r-2 border-gray-500 sm:w-16 "
-              onClick={(e) => {
-                dispatch(LikeVideo());
-                console.log("calles1");
+              onClick={()=> {              
+                if(isLike==true){
+                  dispatch(dislikeVideo({
+                  userId:JSON.parse(localStorage.getItem("id"))._id,
+                  videoId:searchParam.get("v")
+                  }))
+                  console.log("disllikee")
+                  SetisLike(false)
+                return
+                }                
+                SetisLike(true)               
+                dispatch(likeVideo({
+                  userId:JSON.parse(localStorage.getItem("id"))._id,
+                  videoId:searchParam.get("v")
+                }))   
               }}
             >
               {isLike ? <AiFillLike size={24} /> : <BiLike size={24} />}
             </div>
           </div>
 
-          <div className="flex w-16 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-2xl pl-4 ">
+          <div
+            className="flex w-16 h-8 bg-slate-400 hover:bg-slate-500 items-center rounded-2xl pl-4 "
+            onClick={handlePlaylist}
+          >
             <CgPlayListAdd size={24} />
           </div>
 
@@ -244,28 +304,28 @@ useEffect(()=>{
             onClick={onShare}
           >
             <RiShareForwardLine size={24} />
-
             <div className="font-semibold ">Share</div>
-          </div>
+          </div>  
 
-          <MdOutlineWatchLater
-            className="flex sm:w-8 sm:h-8 w-8 h-8  hover:bg-slate-500 items-center rounded-full pl-1 "
-            size={32}
-          />
+
         </div>
       </div>
 
       <div className="">
-        <CommentContainer />
+        <CommentContainer/>
       </div>
-
-      <div>
-        <Comment_List />
+      {console.log(Commentdata,"commentdata")}
+     <div className="flex w-[70%] h-auto">
+     <div className="flex flex-col h-auto w-[80%] ">
+        {Commentdata?.map((i,j) =>{
+          return  <CommentCard data={i} index={j} key={i._id}/>
+        })}
       </div>
+     </div>
 
       {/* Overlay of unsubscribe */}
 
-      {unsubscribe ? (
+      {unsubscribe? (
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-25 z-40"
           ref={overlayRef}
@@ -302,6 +362,10 @@ useEffect(()=>{
           color: "white",
         }}
       />
+
+     {isPlaylist? <div className="fixed w-full h-full bg-black opacity-80 ">
+        <Playlist />
+      </div>:null}
     </>
   );
 };
