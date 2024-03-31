@@ -1,35 +1,37 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const likeVideo=createAsyncThunk("like",async(data)=>{
+  const res= await axios.post("http://localhost:3500/api/v1/likevideo",data)
+})
+
+export const getlikeVideo=createAsyncThunk("liked",async(data)=>{
+  const res= await axios.post ("http://localhost:3500/api/v1/likedata",data)
+  console.log(res.data.data,"getliked");
+  return res.data.data
+})
+
+export const dislikeVideo=createAsyncThunk("dislike",async(data)=>{
+  const res= await axios.post("http://localhost:3500/api/v1/dislike",data)
+  return res.data.data
+})
 
 const LikeSlice = createSlice({
   name: "like",
   initialState: {
-    isLike: false,
-    isdislike: false,
-    isthreedot: false,
+    likedata:[]
   },
   reducers: {
-    LikeVideo: (state, action) => {
-      if (state.isdislike == true) {
-        state.isdislike = false;
-      }
-
-      state.isLike = !state.isLike;
-      console.log(state.isLike, "isLike");
-    },
-    DisLikeVideo: (state) => {
-      if (state.isLike == true) {
-        state.isLike = false;
-      }
-      state.isdislike = !state.isdislike;
-    },
-
-    isthreedotactive: (state) => {
-      state.isthreedot = !state.isthreedot;
-    },
-    isclickOutsidethreedot:(state,action)=>{
-        state.isthreedot=action.payload
-    }
+    
   },
+  extraReducers:(builder)=>{
+    builder.addCase(getlikeVideo.fulfilled,(state,action)=>{
+      console.log(action.payload,"action.payloadLike");
+      state.likedata=action.payload
+    }).addCase((dislikeVideo.fulfilled),(state,action)=>{
+      state.likedata=action.payload
+    })
+  }
 });
 
 export const { LikeVideo, DisLikeVideo, isthreedotactive,isclickOutsidethreedot } = LikeSlice.actions;

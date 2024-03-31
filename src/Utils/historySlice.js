@@ -7,11 +7,13 @@ const headers = {
 }
 
 export const HistoryArray=createAsyncThunk("add",async(data)=>{
-console.log(data,"historySlice");
+
 const res= await axios.post('http://localhost:3500/api/v1/createHistory',data,headers)
 
 console.log(res.data,"watch");
 })
+
+
 
 export const watchHistory=createAsyncThunk("history",async(data)=>{
   const res=await axios.post('http://localhost:3500/api/v1/watchHistory',data,headers)
@@ -19,26 +21,42 @@ export const watchHistory=createAsyncThunk("history",async(data)=>{
   return res.data
 })
 
+export const deleteHistory=createAsyncThunk("delete",async(data)=>{
+
+  const res= await axios.post('http://localhost:3500/api/v1/deleteHistory',data,headers)
+  console.log(res.data,"jjkkkll");
+  return res.data.data.videoId 
+  console.log(res.data,"watch");
+  })
+  
+
 const historySlice = createSlice({
   name: "history",
   initialState: {
-    Id:[]
+    Id:[],
+    video:[],
+    delete:false
   },
   reducers: {
     historyArray: (state, action) => {
-      
+     state.video.push(action.payload)
     },
+    deleteList:(state,action)=>{
+      state.delete=action.payload
+    }
   },
 
   extraReducers:(builder)=>{
     builder.addCase(watchHistory.fulfilled,(state,action)=>{
-      console.log(action.payload.data.videoId,"history");
-        state.Id=action.payload.data.videoId
+      console.log(action.payload.data?.videoId,"history");
+        state.Id=action.payload.data?.videoId
+    }).addCase(deleteHistory.fulfilled,(state,action)=>{
+      state.Id=action.payload
     })
   }
 })
 
 
 
-export const {} = historySlice.actions
+export const {historyArray,deleteList} = historySlice.actions
 export default historySlice.reducer

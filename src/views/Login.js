@@ -87,13 +87,13 @@ const handlePassword=()=>{
 
   return (
     <div className=" absolute sm:top-[19%] sm:left-[25%] top-[20%] left-[6%] rounded-3xl shadow-2xl sm:w-[50%] sm:h-[50%] w-[90%] h-[60%] bg-slate-100 sm:flex ">
-      <div className="sm:w-[50%] sm:h-[100%] w-[100%] h-[20%] bg-white   bg-gradient-to-r from-amber-100  to-neutral-200 rounded-3xl  ">
+      <div className="sm:w-[50%] sm:h-[100%] w-[100%] h-[20%] bg-white   bg-gradient-to-r from-amber-100  to-neutral-200 rounded-l-3xl  ">
         <iframe
           className="sm:h-[94%] sm:w-[90%] h-[99%] w-[99%] "
           src="https://lottie.host/embed/1e102c0d-4dba-4d84-9068-77824376a03a/EuODmxT9OA.json"
         ></iframe>
       </div>
-      <div className="bg-gradient-to-r from-rose-200 to-gray-200 sm:h-[100%] h-[90%] w-[96%]  sm:w-[90%]  rounded-3xl">
+      <div className="bg-gradient-to-r from-rose-200 to-gray-200 sm:h-[100%] h-[90%] w-[96%]  sm:w-[90%]  rounded-r-3xl">
         <div className=" absolute top-[38%] sm:left-[45%] left-[4%] flex justify-baseline w-[60%] h-10 rounded-3xl  p-1">
           <AiTwotoneMail size={18} className="m-2"  />
           <label>

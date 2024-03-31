@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { VideoArray } from "../Utils/ItemSlice";
 import { VideoApi } from "../Utils/Constant";
+import axios from "axios";
 import { isSubscribe, ConfirmUnsubscribe } from "../Utils/SubscribeSlice";
 const Body = () => {
   let dispatch = useDispatch();
@@ -19,6 +20,7 @@ const Body = () => {
       let Json_data = await datas.json();
       dispatch(VideoArray(Json_data.items));
       console.log(Json_data.items, "hello");
+      localStorage.setItem("videos",JSON.stringify(Json_data.items));
     }
 
     data();
