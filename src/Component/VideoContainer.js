@@ -37,7 +37,7 @@ const VideoContainer = () => {
               <Link to={"/watch?v=" + item.id}>
                 <VideoCard thumbnail={item.snippet?.thumbnails} item={item} key={item.id}/>
               </Link>
-            );
+            )
           })}
         </div>
       )}

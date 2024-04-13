@@ -3,10 +3,9 @@ import VideoContainer from "./VideoContainer";
 import ButtonList from "./ButtonList";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import SearchVideo from "./SearchVideo";
-
+import SearchVideo from "./SearchVideo"
 import SearchSuggestion from "./SearchSuggestion";
-import Shimmer from "../Utils/Shimmer";
+import Shimmer from "../Utils/Shimmer"
 
 const MainBody = () => {
   let dispatch = useDispatch();
@@ -15,12 +14,10 @@ const MainBody = () => {
   console.log(isSearched,"fdfdfd");
   return (
     <>
-
-    
-      <div className=" w-full ">
+      <div className=" w-full sm:mt-6 mt-[32%] ">
         {isSearched?<SearchVideo/>
           :<div>
-            <ButtonList />
+          
 <VideoContainer />
             </div>
         }

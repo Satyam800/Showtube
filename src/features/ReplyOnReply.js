@@ -9,7 +9,7 @@ import { IsComment } from "../Utils/isCommentPost";
 import { useLocation,useSearchParams } from "react-router-dom";
 import { OnClicked } from "../Utils/UserSlice";
 import { BsEmojiSunglasses } from "react-icons/bs";
-import { replyCreate } from "../Utils/commentSlice";
+import { replyCreate,Insert } from "../Utils/commentSlice";
 import CommentCard from "./CommentCard"
 
 const ReplyOnReply = (props) => {
@@ -79,6 +79,8 @@ console.log(commentId,"repluoi");
       userId:JSON.parse(localStorage.getItem("id"))._id,
     }))
     dispatch(IsComment(true))
+    dispatch(Insert(true))
+
     setinputContent(" ")
   }
   const handleCancel = (e) => {

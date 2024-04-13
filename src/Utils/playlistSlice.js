@@ -13,6 +13,12 @@ console.log(res.data,"watch");
 return res.data.data
 })
 
+export const DeletePlaylist=createAsyncThunk("delete",async(data)=>{
+  console.log(data,"playlistSlice");
+  const res= await axios.post('http://localhost:3500/api/v1/deletePlaylist',data,headers)
+  console.log(res.data,"delete");
+  return res.data.data
+  })
 
 
 export const playlist=createAsyncThunk("playlist",async(data)=>{
@@ -34,6 +40,8 @@ const playlistSlice = createSlice({
       console.log(action.payload,"playlist");
         state.list=action.payload?.data
     }).addCase(createPlaylist.fulfilled,(state,action)=>{
+      state.list=action.payload
+    }).addCase(DeletePlaylist.fulfilled,(state,action)=>{
       state.list=action.payload
     })
   }

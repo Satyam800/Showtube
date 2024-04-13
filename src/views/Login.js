@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { loginState } from "../Utils/authSlice";
+import { insert } from "../Utils/NotificationSlice";
 import ResetPassword from "./ResetPassword";
 import { Link } from "react-router-dom";
 const Login = () => {
@@ -42,6 +43,7 @@ useEffect(()=>{
 
 useEffect(()=>{
   if(signInMessage?.success==true){
+    dispatch(insert("succesfully login"+" "+signInMessage?.data?.user?.name))
     console.log(signInMessage,"nmnmnm");
     localStorage.setItem('token',signInMessage.data.token)
     localStorage.setItem("id",JSON.stringify(signInMessage?.data?.user))
@@ -56,7 +58,6 @@ SetValidateForm(
 )
 
 if(validateForm) return
-
 
 if(isSignUp){
   console.log(userNameRef.current?.value, emailRef.current?.value, passwordRef.current?.value);

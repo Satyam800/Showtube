@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { playlist } from "../../Utils/playlistSlice";
+import { DeletePlaylist, playlist } from "../../Utils/playlistSlice";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import Header from "../Header";
@@ -37,6 +37,17 @@ const Playlistcard = () => {
     });
   });
   console.log(filter, "jj");
+
+  const handleDelete=(i)=>{
+
+    dispatch(DeletePlaylist({
+      userId:JSON.parse(localStorage.getItem("id"))._id,
+      videoId:i.id,
+      Id:param.get("id")
+    }))
+
+    console.log(i,"opop");
+  }
   return (
     <>
       <Header />
@@ -44,11 +55,11 @@ const Playlistcard = () => {
         {filter.map((i) => {
           return (
             <div className="flex sm:w-[76%] w-full rounded-lg sm:h-40 h-28 bg-slate-100">
-              <Link to={"/watch?v=" +  i.id}>
+              <Link to={"/watch?v=" + i.id}>
                 <img
                   className=" w-40 h-38 rounded-md"
                   alt="thumbnail"
-                  src={i?.snippet?.thumbnails?.high.url }
+                  src={i?.snippet?.thumbnails?.high.url}
                 />
               </Link>
               <div
@@ -60,8 +71,8 @@ const Playlistcard = () => {
                   {i?.snippet.channelTitle}
                 </div>
               </div>
-              <span className="absolute flex align-baseline mt-[10%] font-bold ml-[65%] w-24 h-8 bg-black text-white rounded-r-xl p-0.3 hover:bg-stone-500">
-                Remove <RiDeleteBack2Fill size={32} />
+              <span className="absolute flex align-baseline mt-[10%] font-bold ml-[65%] w-12 cursor-pointer h-8 bg-black text-white rounded-r-xl p-0.3 hover:bg-stone-500">
+                <RiDeleteBack2Fill size={32} onClick={()=>handleDelete(i)} />
               </span>
             </div>
           );
