@@ -6,8 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { list } from "../../Utils/HembegerSlice";
 import { createPlaylist, playlist } from "../../Utils/playlistSlice";
-import { all } from "axios";
-const Playlist = () => {
+import {  } from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+  const Playlist = () => {
   const [searchParam] = useSearchParams();
   const Id = searchParam.get("v");
   const playlistRef = useRef([]);
@@ -49,9 +52,18 @@ const Playlist = () => {
         userId: JSON.parse(localStorage.getItem("id"))?._id,
         videoId: Id,
       })
+
     )
+
+    setTimeout(() => {
+      toast(`saved to playlist`, {
+        position: toast.POSITION.BOTTOM_LEFT,
+        className: "foo-bar",
+      });
+    }, 1000);
     SetclickedOnCreate(true);
     SetisCreate(false);
+  
   };
 
   const handleCut = () => {
@@ -60,7 +72,7 @@ const Playlist = () => {
   };
   return (
     <>
-      <div className="absolute top-[25%] z-200 left-[39%] z-100 flex flex-col p-1 sm:w-[20%] w-[47%] min-h-[38%] max-h-auto bg-white bg-opacity-100 shadow-xl rounded-sm ">
+      <div className="absolute top-[25%] z-200 left-[39%]  flex flex-col p-1 sm:w-[20%] w-[47%] min-h-[38%] max-h-auto bg-white  shadow-xl rounded-sm ">
         <RiDeleteBack2Fill
           size={32}
           className="absolute left-[93%] top-0 cursor-pointer"
@@ -98,7 +110,7 @@ const Playlist = () => {
         )}
 
         {isCreate ? (
-          <label className="flex flex-col   w-[90%] ml-[5%] rounded-lg   font-semibold">
+          <label className="flex flex-col z-200   w-[90%] ml-[5%] rounded-lg   font-semibold">
             <span className="text-xl font-medium m-1"> Title</span>
             <input
               ref={titleRef}
@@ -115,6 +127,15 @@ const Playlist = () => {
           </label>
         ) : null}
       </div>
+
+      <ToastContainer
+        autoClose={2000}
+        toastStyle={{
+          borderRadius: "100px",
+          backgroundColor: "black",
+          color: "white",
+        }}
+      />
     </>
   );
 };

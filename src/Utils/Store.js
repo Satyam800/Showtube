@@ -14,7 +14,7 @@ import AuthSlice from "./authSlice";
 import historySlice from "./historySlice";
 import playlistSlice from "./playlistSlice";
 import commentSlice from "./commentSlice";
-
+import NoteSlice from "./noteSlice";
 
 const Store = configureStore({
   reducer: {
@@ -33,7 +33,7 @@ const Store = configureStore({
     history:historySlice,
     playlist:playlistSlice,
     comment:commentSlice,
-    
+    notes:NoteSlice
   },
 })
 

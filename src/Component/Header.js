@@ -24,9 +24,14 @@ import { ThemeChange } from "../Utils/ThemeSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useLocation, Navigate } from "react-router-dom";
 import { loginState, clearMessage } from "../Utils/authSlice";
+import { fetchData } from "../Utils/SearchSlice";
 import { Link } from "react-router-dom";
+import { API_KEY } from "../Utils/Constant";
+import { FaRegCircleDot } from "react-icons/fa6";
+import Notification from "./Notification";
+import axios from "axios";
 const Header = () => {
-  const Searchdata = useSelector((state) => state.search?.event);
+  const Searchdata = useSelector((state) => state.search?.Result);
   const ShowResult = useSelector((state) => state.search?.Result);
   const showSearchSuggestion = useSelector((state) => state.search.isOnFocus);
   const CacheResult = useSelector((state) => state.cache);
@@ -44,9 +49,10 @@ const Header = () => {
   const onclickonModeoptionRef = useRef();
   const [userDetail, SetuserDetail] = useState();
   const [isSignIn, SetisSignIn] = useState("");
+  const SuggestionRef=useRef()
   const [ClickedOnUser, SetClickedOnUser] = useState(false);
   const SearchResult = () => {
-    console.log(ShowResult, "ok");
+   
   };
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -64,6 +70,7 @@ const Header = () => {
 
     SetuserDetail(user);
     SetisSignIn(isLogin);
+   Setnotificaton(false)
   }, []);
 
   const userFirstName = userDetail?.name.split("");
@@ -82,8 +89,11 @@ const Header = () => {
       clearTimeout(promise);
     };
   }, [Searchdata]);
-  const url = YouTube_Search_API + Searchdata;
+ 
   async function Search() {
+   
+ 
+   
     // const data = await fetch(url, {
     //   method: "GET",
     // });
@@ -101,7 +111,7 @@ const Header = () => {
 
   const Iconswitch = () => {
     dispatch(toggleMenu());
-  };
+  }
 
   const handleuser = () => {
     if (UserRef.current.innerText == "Login") {
@@ -124,6 +134,7 @@ const Header = () => {
 
     document.addEventListener("click", handleoustside);
   }, []);
+  
 
   useEffect(() => {
     const handleoutsideevent = (e) => {
@@ -133,28 +144,47 @@ const Header = () => {
         }
       }
 
-      document.addEventListener("click", handleoutsideevent);
+     
+
+      if(!notificationRef.current?.contains(e.target)&&!iconRef.current?.contains(e.target)){
+        console.log("nojiji")
+        Setnotificaton(false)
+      }
+
+     
     };
+    document.addEventListener("click", handleoutsideevent);
   }, []);
+
   const handleMode = () => {
     dispatch(ClickonMode(true));
   };
+  const lengthNotify=useSelector(store=>store.notification.text)
 
   const handledarkmode = () => {
-    const root = document.getElementById(root);
-    root.style.backgroundColor = "black";
+    const roots = document.getElementById("root");
+    roots.style.backgroundColor = "black";
 
     dispatch(ThemeChange(true));
     dispatch(ClickonMode(false));
-  };
+  }
   const handlelightmode = () => {
+    const roots = document.getElementById("root")
+    roots.style.backgroundColor = "white"
     dispatch(ThemeChange(false));
     dispatch(ClickonMode(false));
-  };
+  }
+ const [notification,Setnotificaton]=useState(false)
+ 
+ const notificationRef=useRef()
+ const iconRef=useRef()
+  const handleDisappear=()=>{
+Setnotificaton(true)
+  }
 
   return (
     <>
-      <div className="grid sm:grid-cols-5 grid-cols-3 shadow-md items-baseline  fixed w-full z-20 bg-white">
+      <div className="top-0 grid sm:grid-cols-5 grid-cols-3 shadow-md items-baseline  fixed w-full z-20 bg-white">
         <div className="flex p-5   items-center   ">
           <img
             onClick={Iconswitch}
@@ -172,9 +202,11 @@ const Header = () => {
             <input
               placeholder="Search"
               className=" rounded-l-full w-[95%] h-full outline-gray-600 p-2 text-xl "
-              onChange={(e) => dispatch(SearchType(e.target.value))}
+              onChange={(e) => dispatch(fetchData({
+                url: e.target.value
+              }))}
               onFocus={() => dispatch(ShowSuggestion(true))}
-              onBlur={() => dispatch(ShowSuggestion(false))}
+              // onBlur={() => dispatch(ShowSuggestion(false))}
             />
 
             <div
@@ -185,9 +217,13 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="absolute sm:left-[85%] top-7 left-[62%] flex justify-evenly  align-baseline sm:mr-1 sm:space-x-2">
+        <div className="absolute  sm:left-[85%] top-7 left-[62%] flex justify-evenly  align-baseline sm:mr-1 sm:space-x-2"  ref={iconRef}>
           <div className="h-8 w-8 mr-[55%] bg-slate-300 rounded-full p-1 cursor-pointer ">
-            <BsFillBellFill size={22} />
+            <BsFillBellFill size={22} onClick={handleDisappear} / >
+          
+           {notification?<div className="absolute  right-4 top-9 " ref={notificationRef}>
+           <Notification/>
+           </div>:null}
           </div>
           <div onClick={handleuser} ref={UserRef}>
             {JSON.parse(localStorage.getItem("id")) ? (
@@ -203,9 +239,9 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="w-full ml--8">
-        {Searchdata.length > 0 && showSearchSuggestion ? (
-          <div className="z-40 relative top-20  ">
+      <div className="w-full ml--8" >
+        {Searchdata?.length > 0 && showSearchSuggestion ? (
+          <div className="z-40 relative top-20  " ref={SuggestionRef}>
             <SearchSuggestion />
           </div>
         ) : null}

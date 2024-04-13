@@ -3,6 +3,8 @@ import Header from './Header'
 import VideoCard from './VideoCard'
 
 const SearchVideo = () => {
+  
+
   return (
   <>
   <Header/>

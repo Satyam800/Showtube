@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSortDown } from "react-icons/fa";
 import { FaSortUp } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import ReplyComment from "./ReplyComment";
-import { reply,replyFirst } from "../Utils/commentSlice";
+import { reply,replyFirst,Insert } from "../Utils/commentSlice";
 import ReplyOnReply from "./ReplyOnReply";
+import { GoCommentDiscussion } from "react-icons/go";
+
 const ReplyCard = (props) => {
   const dispatch = useDispatch();
   const [isreplied, SetisReplied] = useState(false);
@@ -13,6 +15,9 @@ const ReplyCard = (props) => {
   const handleReply = () => {
     SetisReplied(true);
   };
+  const insert = useSelector((store) => store.comment.insert);
+
+
 
   return (
     <>
@@ -42,7 +47,8 @@ const ReplyCard = (props) => {
           </div>
         </div>
         <div className="flex w-32 h-8 ml-[39%] mt-1 items-baseline">
-          <AiOutlineLike size={18} />
+        <GoCommentDiscussion size={20} />
+
           <div
             className=" text-sm w-12 h-8 rounded-xl p-1 cursor-pointer ml-4 hover:bg-stone-200"
             onClick={handleReply}

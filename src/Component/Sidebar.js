@@ -13,14 +13,20 @@ import { IoIosArrowDropdown } from "react-icons/io";
 import { IoIosArrowDropup } from "react-icons/io";
 import { playlist } from "../Utils/playlistSlice";
 import Playlistcard from "./Playlist/Playlistcard";
-import { useParams,useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
+import { GetSubs } from "../Utils/LikeSlice";
+import { MdOutlinePlaylistAddCheck } from "react-icons/md";
+
 const Sidebar = () => {
+  const [params] = useSearchParams();
   const icon = useSelector((state) => state.Icon?.isMenuOpen);
   const [show, Setshow] = useState(false);
   const playlistItem = useSelector((store) => store.playlist.list);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const searchparam=useSearchParams()
+  const subscribers = useSelector((store) => store.like.subscribed);
+  const [see, SetSee] = useState(false);
+  const searchparam = useSearchParams();
   const showmore = () => {
     Setshow(true);
   };
@@ -28,16 +34,36 @@ const Sidebar = () => {
   useEffect(() => {
     dispatch(
       playlist({
-        userId: JSON.parse(localStorage.getItem("id"))._id,
+        userId: JSON.parse(localStorage.getItem("id"))?._id,
+      })
+    );
+
+    dispatch(
+      GetSubs({
+        videoId: params.get("v"),
+        userId: JSON.parse(localStorage.getItem("id"))?._id,
       })
     );
   }, []);
+  useEffect(() => {}, [subscribers, playlistItem, see]);
+
+  const fixedLength = subscribers?.filter((i, j) => {
+    if (j < 5) {
+      return i;
+    }
+  });
+
+  const showmoreLength = () => {
+    SetSee(true);
+  };
+  const togglemap = see ? subscribers : fixedLength;
+
   return (
     <>
       {icon ? (
-        <div className=" flex flex-col justify-evenly  p-1  sm:h-full  fixed top-[8%] sm:w-[19%] w-[30%] h-[90%] overflow-y-scroll bg-white rounded-lg z-40">
+        <div className=" flex flex-col justify-evenly  p-4  sm:h-full  fixed top-[8%] sm:w-[19%] w-[60%] h-[90%]  overflow-y-scroll  bg-white rounded-lg z-40">
           <Link to="/">
-            <div className=" absolute top-[15%] w-[80%] h-8 flex hover:bg-slate-400 cursor-pointer rounded-md p-1">
+            <div className=" absolute top-[15%] w-[80%] h-8 flex hover:bg-slate-400 cursor-pointer rounded-md p-1 ">
               <AiFillHome size={20} />
               <div className="font-bold ml-[6%]">Home</div>
             </div>
@@ -60,38 +86,80 @@ const Sidebar = () => {
             </div>
           </Link>
 
-          {show ? null : (
-            <div
-              className=" absolute sm:top-[34%] top-[38%] w-[80%] h-8 flex  cursor-pointer rounded-md p-1  "
-              onClick={showmore}
-            >
-              <IoIosArrowDropdown size={26} />
+          <div className="absolute flex flex-col sm:top-[34%] top-[60%] w-[80%] ">
+            <hr className="  w-[95%] h-0.5 bg-black "></hr>
+            <div className="m-3">
+              <div className="font-semibold m-3 text-xl">Subscription</div>
 
-              <div className="font-bold ml-[9%] w-[70%]">Show more</div>
-            </div>
-          )}
-
-          {show ? (
-            <div className="absolute top-[36%] justify-between flex flex-col font-semibold  w-[80%] h-8  cursor-pointer rounded-md p-1 ">
-              {playlistItem.map((i) => {
-                return (
-                  <Link to={"/playlist?id="+i._id}>
-                    <div className="w-[80%] h-8 rounded-sm hover:bg-slate-400 mt-4">
-                      {i.name}
+              <div className="flex flex-col gap-y-4">
+                {togglemap?.map((i, j) => {
+                  return (
+                    <div className="flex font-serif">
+                      <img
+                        className="h-8 w-8 rounded-full mr-4 "
+                        alt="dp"
+                        src={i.url}
+                      />
+                      <div>{i.subscriber}</div>
                     </div>
-                  </Link>
-                );
-              })}
-              <div className="flex font-semibold mt-4 ">
-                {" "}
-                <IoIosArrowDropup
-                  size={26}
-                  onClick={() => Setshow(false)}
-                />{" "}
-                Show more
+                  );
+                })}
+                {see ? (
+                  <div
+                    className="flex mt-4 mb-9 hover:bg-stone-400 rounded-md cursor-pointer"
+                    onClick={() => SetSee(false)}
+                  >
+                    {" "}
+                    <IoIosArrowDropup size={26} /> Show fewer
+                  </div>
+                ) : (
+                  <div className="hover:bg-stone-400  h-8 flex  cursor-pointer rounded-md p-1 ">
+                   {subscribers.length>5? <IoIosArrowDropdown size={26} />:null}
+
+                    <div className=" ml-[9%] w-[70%] " onClick={showmoreLength}>
+                      {subscribers.length>5?`Show ${subscribers.length - 5} more`:null} 
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          ) : null}
+            <hr className="w-[95%] h-0.5 bg-black "></hr>
+
+            {show ? null : (
+              <div
+                className="  h-8 flex hover:bg-stone-400  cursor-pointer rounded-md p-1 mb-[5%] "
+                onClick={showmore}
+              >
+                <IoIosArrowDropdown size={26} />
+
+                <div className="font-bold ml-[9%] w-[70%]">Show more</div>
+              </div>
+            )}
+
+            {show ? (
+              <div className="justify-between flex flex-col font-semibold  w-[80%] h-auto cursor-pointer rounded-md p-1  ">
+                {playlistItem.map((i) => {
+                  return (
+                    <Link to={"/playlist?id=" + i._id}>
+                      <div className="flex p-1 rounded-sm hover:bg-slate-400">
+                        <MdOutlinePlaylistAddCheck size={29} className="" />
+                        <div className="w-[80%] h-8   ml-4">
+                          {i.name}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+                <div
+                  className="flex font-semibold mt-4 mb-9 hover:bg-stone-400 rounded-md cursor-pointer "
+                  onClick={() => Setshow(false)}
+                >
+                  {" "}
+                  <IoIosArrowDropup size={26} /> Show less
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       ) : null}
     </>

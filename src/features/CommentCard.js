@@ -9,11 +9,16 @@ import { FaSortUp } from "react-icons/fa";
 import ReplyCard from "./ReplyCard";
 import ReplyOnReply from "./ReplyOnReply";
 import CommentList from "./CommentList";
+import { Insert } from "../Utils/commentSlice";
+import { GoCommentDiscussion } from "react-icons/go";
+
 const CommentCard = (props) => {
   const [isreplied, SetisReplied] = useState(false);
   const [replied, SetReplied] = useState(false);
   const data = useSelector((store) => store.comment.replies);
   const commentdata = useSelector((store) => store.comment.commentlist);
+  const insert = useSelector((store) => store.comment.insert);
+
 
   const dispatch = useDispatch();
   const handleReply = (i) => {
@@ -23,6 +28,15 @@ const CommentCard = (props) => {
   useEffect(()=>{
    
   },[data,commentdata])
+  useEffect(()=>{
+  if(insert==true){
+    SetReplied(false)
+    SetisReplied(false)
+  }
+  
+ dispatch(Insert(false))
+
+  },[insert])
   const handleReplies = () => {
     dispatch(
       reply({
@@ -47,7 +61,7 @@ const CommentCard = (props) => {
         </div>
       </div>
       <div className="flex w-32 h-8 ml-[19%] mt-3 items-baseline">
-        <AiOutlineLike size={18} />
+       <GoCommentDiscussion size={20}/>
         <div
           className=" text-sm w-12 h-8 rounded-xl p-1 cursor-pointer ml-4 hover:bg-stone-200"
           onClick={handleReply}

@@ -1,4 +1,5 @@
 import "./App.css";
+import React,{useState,useEffect} from "react";
 import ButtonList from "./Component/ButtonList";
 import Header from "./Component/Header";
 import Sidebar from "./Component/Sidebar";
@@ -16,6 +17,8 @@ import NewPassword from "./views/NewPassword.js";
 import WatchHistory from "./Component/History/WatchHistory.js";
 import LikedVideo from "./Component/Like/LikedVideo.js";
 import Playlistcard from "./Component/Playlist/Playlistcard.js";
+import SearchResult from "./Component/SearchResult.js";
+import Offline from "./Component/Offline.js";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -61,15 +64,34 @@ const appRouter = createBrowserRouter([
     element:<LikedVideo/>
   },
   {
-    path:"/playlist/",
+    path:"/playlist",
     element:<Playlistcard/>
-  }
+  },
+ {
+  path:"/search/:id",
+  element:<SearchResult/>
+ }
   
 ])
 
 function App() { 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   return (
     <>
+    {!isOnline?<Offline/>:null}
       <Provider store={Store}>
 
 

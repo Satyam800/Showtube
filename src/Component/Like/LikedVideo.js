@@ -20,6 +20,7 @@ console.log(like,"like")
     }
     })
   })  
+  console.log(filterList,like,"filterList");
 useEffect(()=>{
 
 },[like])
@@ -29,7 +30,7 @@ useEffect(()=>{
         userId:id?._id,
       })
     )
-  },[])
+  },[]) 
   return (
     <>
     <Header/>

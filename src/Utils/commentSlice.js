@@ -39,9 +39,13 @@ const commentSlice = createSlice({
   name: "comment",
   initialState: {
     commentlist:[],
-    replies:[]
+    replies:[],
+    insert:false
   },
-  reducers: { 
+  reducers: {
+    Insert:(state,action)=>{
+      state.insert=action.payload
+    } 
   },
   extraReducers:(builder)=>{
      builder.addCase(createcomment.fulfilled,(state,action)=>{
@@ -53,10 +57,10 @@ const commentSlice = createSlice({
      }).addCase(replyCreate.fulfilled,(state,action)=>{
       state.replies=action?.payload
      }).addCase(replyFirst.fulfilled,(state,action)=>{
-      state.commentlist=action.payload.reverse()
+      state.commentlist=action.payload
      })
   }
 })
-export const { } = commentSlice.actions;
+export const { Insert} = commentSlice.actions;
 export default commentSlice.reducer;
 
