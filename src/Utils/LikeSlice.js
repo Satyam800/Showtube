@@ -1,36 +1,37 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { URL } from "./Constant";
 
 export const likeVideo=createAsyncThunk("like",async(data)=>{
-  const res= await axios.post("http://localhost:3500/api/v1/likevideo",data)
+  const res= await axios.post(URL+"/likevideo",data)
   return res.data
 })
 
 export const getlikeVideo=createAsyncThunk("liked",async(data)=>{
-  const res= await axios.post ("http://localhost:3500/api/v1/likedata",data)
+  const res= await axios.post (URL+"/likedata",data)
   console.log(res.data.data,"getliked");
   return res.data
 })
 
 export const dislikeVideo=createAsyncThunk("dislike",async(data)=>{
-  const res= await axios.post("http://localhost:3500/api/v1/dislike",data)
+  const res= await axios.post(URL+"/dislike",data)
   return res.data
 })
 
 export const subscribe=createAsyncThunk("subscribe",async(data)=>{
-  const res= await axios.post("http://localhost:3500/api/v1/subscribe",data)
+  const res= await axios.post(URL+"/subscribe",data)
 
   return res.data.data
 })
 
 export const RemoveSubs=createAsyncThunk("unsubscribe",async(data)=>{
-  const res= await axios.post("http://localhost:3500/api/v1/unsubscribe",data)
+  const res= await axios.post(URL+"/unsubscribe",data)
 
   return res.data.data
 }) 
 
 export const GetSubs=createAsyncThunk("getallsubscribe",async(data)=>{
-  const res= await axios.post("http://localhost:3500/api/v1/list",data)
+  const res= await axios.post(URL+"/list",data)
 
   return res.data.data
 }) 

@@ -1,22 +1,22 @@
 import { extraReducers,createSlice,createAsyncThunk} from "@reduxjs/toolkit";
 import axios from 'axios';
-
+import { URL } from "./Constant";
 
 export const postUser=createAsyncThunk('SignUp',async(data)=>{
   try{
     
-    const response= await axios.post('http://localhost:3500/api/v1/signup',data)
+    const response= await axios.post(URL+'/signup',data)
       console.log(response,"jbkjb");
      return response.data
   }catch(err){
- console.log(err,"post");
+ console.log(err,"post")
  return err.response.data
   }
 })
 export const SignInUser=createAsyncThunk("SignIn",async(data)=>{
   try {
     console.log("hgfd");
-     const response=await axios.post('http://localhost:3500/api/v1/login',data)
+     const response=await axios.post(URL+'/login',data)
      console.log(response,"knb")
      return response.data
   } catch (error) {
@@ -24,7 +24,7 @@ export const SignInUser=createAsyncThunk("SignIn",async(data)=>{
   }
 })
 export const ForgotPassword=createAsyncThunk("resetPassword",async(data)=>{
-   const res=await axios.post('http://localhost:3500/api/v1/resetPassword',data)
+   const res=await axios.post(URL+'/resetPassword',data)
    console.log(res,"reset")
    return res.data
 })

@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { URL } from "./Constant";
 
 const headers = {
   'Content-Type': 'application/json',
@@ -8,7 +9,7 @@ const headers = {
 
 export const HistoryArray=createAsyncThunk("add",async(data)=>{
 
-const res= await axios.post('http://localhost:3500/api/v1/createHistory',data,headers)
+const res= await axios.post(URL+'/createHistory',data,headers)
 
 console.log(res.data,"watch");
 })
@@ -16,14 +17,14 @@ console.log(res.data,"watch");
 
 
 export const watchHistory=createAsyncThunk("history",async(data)=>{
-  const res=await axios.post('http://localhost:3500/api/v1/watchHistory',data,headers)
+  const res=await axios.post(URL+'/watchHistory',data,headers)
   console.log(res.data,"watchhistory");
   return res.data
 })
 
 export const deleteHistory=createAsyncThunk("delete",async(data)=>{
 
-  const res= await axios.post('http://localhost:3500/api/v1/deleteHistory',data,headers)
+  const res= await axios.post(URL+'/deleteHistory',data,headers)
   console.log(res.data,"jjkkkll");
   return res.data.data.videoId 
   console.log(res.data,"watch");

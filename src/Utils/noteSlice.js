@@ -1,26 +1,27 @@
 import { createSlice ,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { URL } from "./Constant";
 
 export const createNotes=createAsyncThunk("notes",async(data)=>{
 console.log(data,"notesSlice");
-const res=await axios.post("http://localhost:3500/api/v1/createnote",data)
+const res=await axios.post(URL+"/createnote",data)
 console.log(res.data.datas,"resnorew");
 return res.data.datas
 })
 
 export const getNotes=createAsyncThunk("get",async(data)=>{
-    const res=await axios.post("http://localhost:3500/api/v1/getnotes",data)
+    const res=await axios.post(URL+"/getnotes",data)
     return res.data.datas
 })
 export const deleteNotes=createAsyncThunk("delete",async(data)=>{
     console.log(data,"delete");
-    const res=await axios.post("http://localhost:3500/api/v1/deletenote",data)
+    const res=await axios.post(URL+"/deletenote",data)
     return res.data.datas
 })
 
 export const updateNotes=createAsyncThunk("update",async(data)=>{
     console.log(data,"update");
-    const res=await axios.put("http://localhost:3500/api/v1/updatenote",data)
+    const res=await axios.put(URL+"/updatenote",data)
     return res.data.datas
 })
 
