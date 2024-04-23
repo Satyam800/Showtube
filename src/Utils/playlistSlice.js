@@ -1,5 +1,6 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { URL } from "./Constant";
 
 const headers = {
   'Content-Type': 'application/json',
@@ -8,21 +9,21 @@ const headers = {
 
 export const createPlaylist=createAsyncThunk("create",async(data)=>{
 console.log(data,"playlistSlice");
-const res= await axios.post('http://localhost:3500/api/v1/createPlaylist',data,headers)
+const res= await axios.post(URL+'/createPlaylist',data,headers)
 console.log(res.data,"watch");
 return res.data.data
 })
 
 export const DeletePlaylist=createAsyncThunk("delete",async(data)=>{
   console.log(data,"playlistSlice");
-  const res= await axios.post('http://localhost:3500/api/v1/deletePlaylist',data,headers)
+  const res= await axios.post(URL+'/deletePlaylist',data,headers)
   console.log(res.data,"delete");
   return res.data.data
   })
 
 
 export const playlist=createAsyncThunk("playlist",async(data)=>{
-  const res=await axios.post('http://localhost:3500/api/v1/fetchPlaylist',data,headers)
+  const res=await axios.post(URL+'/fetchPlaylist',data,headers)
   console.log(res.data,"fetchPlaylist");
   return res.data
 })

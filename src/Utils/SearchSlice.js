@@ -1,8 +1,7 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const TitleData=JSON.parse(localStorage.getItem("videos")).map((i)=>i.snippet.channelTitle)
-
+const TitleData=JSON?.parse(localStorage?.getItem("videos"))?.map((i)=>i?.snippet?.channelTitle)
 
 
 const SearchSlice = createSlice({

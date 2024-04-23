@@ -1,22 +1,23 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { URL } from "./Constant";
 
 export const createcomment= createAsyncThunk("commment",async (data)=>{
     
-  const res= await axios.post("http://localhost:3500/api/v1/comment",data)
+  const res= await axios.post(URL+"/comment",data)
   console.log(res,"first");
   return res.data.data
 })
 
 export const getData= createAsyncThunk("getcomment",async (data)=>{
-  const res=await axios.post("http://localhost:3500/api/v1/getComment",data)
+  const res=await axios.post(URL+"/getComment",data)
   console.log(res,"getcooment");
   return res.data.data
 })
 
 export const replyCreate= createAsyncThunk("replycreate",async (data)=>{
   console.log(data,"getreplird");
-  const res=await axios.post("http://localhost:3500/api/v1/replyCreate",data)
+  const res=await axios.post(URL+"/replyCreate",data)
   console.log(res,"replllllll");
  
   return res.data.data.comments
@@ -24,13 +25,13 @@ export const replyCreate= createAsyncThunk("replycreate",async (data)=>{
 
 export const replyFirst= createAsyncThunk("replyfirstcreate",async (data)=>{
   console.log(data,"getreplird")
-  const res=await axios.post("http://localhost:3500/api/v1/firstReply",data)
+  const res=await axios.post(URL+"/firstReply",data)
   console.log(res,"replllllll")
   return res.data.data
 })
 
 export const reply= createAsyncThunk("replies",async (data)=>{
-  const res=await axios.post("http://localhost:3500/api/v1/replyComment",data)
+  const res=await axios.post(URL+"/replyComment",data)
   console.log(res,"getreplird");
   return res.data.data.comments
 })
